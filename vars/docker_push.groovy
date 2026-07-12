@@ -7,16 +7,21 @@ def call(Map config = [:]) {
     withCredentials([
         usernamePassword(
             credentialsId: credentials,
-            usernameVariable: 'USERNAME',
-            passwordVariable: 'PASSWORD'
+            usernameVariable: 'DOCKER_USERNAME',
+            passwordVariable: 'DOCKER_PASSWORD'
         )
     ]) {
 
         sh """
-            echo \$PASSWORD | docker login -u \$USERNAME --password-stdin
+            set -e
 
+            echo "Logging into Docker Hub..."
+            echo "\$DOCKER_PASSWORD" | docker login -u "\$DOCKER_USERNAME" --password-stdin
+
+            echo "Pushing ${imageName}:${imageTag}"
             docker push ${imageName}:${imageTag}
 
+            echo "Pushing ${imageName}:latest"
             docker push ${imageName}:latest
 
             docker logout
