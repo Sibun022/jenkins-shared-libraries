@@ -2,26 +2,20 @@ def call(Map config = [:]) {
 
     def imageName = config.imageName
     def imageTag = config.imageTag ?: "latest"
-    def credentials = config.credentials ?: "docker-hub-credentials"
+    def credentials = config.credentials ?: "docker"
 
     withCredentials([
         usernamePassword(
             credentialsId: credentials,
-            usernameVariable: 'DOCKER_USERNAME',
-            passwordVariable: 'DOCKER_PASSWORD'
+            usernameVariable: 'USERNAME',
+            passwordVariable: 'PASSWORD'
         )
     ]) {
 
         sh """
-            set -e
+            echo \$PASSWORD | docker login -u \$USERNAME --password-stdin
 
-            echo "Logging into Docker Hub..."
-            echo "\$DOCKER_PASSWORD" | docker login -u "\$DOCKER_USERNAME" --password-stdin
-
-            echo "Pushing ${imageName}:${imageTag}"
             docker push ${imageName}:${imageTag}
-
-            echo "Pushing ${imageName}:latest"
             docker push ${imageName}:latest
 
             docker logout
