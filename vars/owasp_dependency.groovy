@@ -2,12 +2,16 @@ def call() {
 
     echo "Running OWASP Dependency Check"
 
-    dependencyCheck additionalArguments: '''
-        --scan .
-        --format HTML
-        --format XML
-    ''',
-    odcInstallation: 'OWASP'
+    dependencyCheck(
+        additionalArguments: '''
+            --scan .
+            --format HTML
+            --format XML
+        ''',
+        odcInstallation: 'OWASP'
+    )
 
-    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+    dependencyCheckPublisher(
+        pattern: '**/dependency-check-report.xml'
+    )
 }
