@@ -2,17 +2,26 @@ def call(Map config = [:]) {
 
     def imageName = config.imageName
     def imageTag = config.imageTag ?: "latest"
-    def credentials = config.credentials ?: "docker"
+    def credentialsId = config.credentials ?: "docker"
+
+    if (!imageName) {
+        error "imageName is required for docker_push"
+    }
 
     withCredentials([
         usernamePassword(
-            credentialsId: credentials,
+            credentialsId: credentialsId,
             usernameVariable: 'USERNAME',
             passwordVariable: 'PASSWORD'
         )
     ]) {
+
         sh """
-            echo \$PASSWORD | docker login -u \$USERNAME --password-stdin
+            set +x
+
+            echo "\$PASSWORD" | docker login \
+                -u "\$USERNAME" \
+                --password-stdin
 
             docker push ${imageName}:${imageTag}
             docker push ${imageName}:latest
