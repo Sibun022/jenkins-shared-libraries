@@ -1,11 +1,11 @@
 def call() {
     dependencyCheck(
+        odcInstallation: 'OWASP',
         additionalArguments: '''
             --scan .
             --format HTML
             --format XML
-        ''',
-        odcInstallation: 'OWASP'
+        '''
     )
 }
 
