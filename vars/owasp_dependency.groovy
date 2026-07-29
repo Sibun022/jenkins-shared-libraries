@@ -5,7 +5,7 @@ def call() {
             --format HTML
             --format XML
         ''',
-        odcInstallation: 'OWASP-Dependency-Check'
+        odcInstallation: 'OWASP'
     )
 }
 
